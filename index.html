@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>🎂 Birthday Countdown Tracker</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- App Icon - You can use a local image too -->
+    <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎂</text></svg>">
+    
     <style>
         * {
             margin: 0;
@@ -14,43 +18,151 @@
             -webkit-tap-highlight-color: transparent;
         }
 
+        /* Background Slideshow */
+        .slideshow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            filter: brightness(0.8);
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        /* Slideshow Controls */
+        .slideshow-controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            display: flex;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .slideshow-controls button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .slideshow-controls button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .slide-indicators {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 100;
+        }
+
+        .indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .indicator.active {
+            background: white;
+            transform: scale(1.2);
+        }
+
+        /* Dark overlay for better readability */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                rgba(0, 0, 0, 0.7),
+                rgba(0, 0, 0, 0.5)
+            );
+            z-index: -1;
+        }
+
         body {
-            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
             min-height: 100vh;
             padding: 15px;
-            color: #333;
+            color: white;
             overflow-x: hidden;
+            position: relative;
         }
 
         .container {
             width: 100%;
             max-width: 500px;
             margin: 0 auto;
-            background-color: rgba(255, 255, 255, 0.98);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            background-color: rgba(255, 255, 255, 0.12);
+            border-radius: 25px;
+            box-shadow: 
+                0 15px 40px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.1) inset;
             overflow: hidden;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
         }
 
         header {
-            background: linear-gradient(to right, #7b2ff7, #f107a3);
+            background: linear-gradient(
+                rgba(123, 47, 247, 0.4),
+                rgba(241, 7, 163, 0.4)
+            );
             color: white;
             text-align: center;
             padding: 25px 15px;
             position: relative;
             overflow: hidden;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         h1 {
             font-size: 1.8rem;
             margin-bottom: 8px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
             padding: 0 10px;
         }
 
         .subtitle {
             font-size: 1rem;
-            opacity: 0.9;
+            opacity: 0.95;
             max-width: 100%;
             margin: 0 auto;
             padding: 0 15px;
@@ -63,6 +175,7 @@
             top: 10px;
             right: 10px;
             transform: rotate(20deg);
+            color: white;
         }
 
         .main-content {
@@ -70,25 +183,44 @@
         }
 
         .section {
-            background: white;
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 16px;
             padding: 20px;
             margin-bottom: 20px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            border: 1px solid #f0f0f0;
+            box-shadow: 
+                0 5px 20px rgba(0, 0, 0, 0.2),
+                0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(to right, 
+                rgba(123, 47, 247, 0.8), 
+                rgba(241, 7, 163, 0.8)
+            );
         }
 
         .section-title {
             font-size: 1.3rem;
-            color: #7b2ff7;
+            color: white;
             margin-bottom: 15px;
             display: flex;
             align-items: center;
             gap: 8px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
         }
 
         .section-title i {
-            color: #f107a3;
+            color: #ffcc00;
         }
 
         .countdown-container {
@@ -99,34 +231,55 @@
         }
 
         .countdown-box {
-            background: white;
+            background: rgba(255, 255, 255, 0.15);
             border-radius: 12px;
             padding: 20px 10px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 5px 15px rgba(123, 47, 247, 0.1);
-            border: 2px solid #f0f0f0;
-            transition: transform 0.2s ease;
+            box-shadow: 
+                0 5px 15px rgba(0, 0, 0, 0.2),
+                0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .countdown-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(to right, 
+                rgba(123, 47, 247, 0.8), 
+                rgba(241, 7, 163, 0.8)
+            );
         }
 
         .countdown-box:active {
             transform: scale(0.98);
+            background: rgba(255, 255, 255, 0.2);
         }
 
         .countdown-value {
             font-size: 2.2rem;
             font-weight: 800;
-            color: #7b2ff7;
+            color: white;
             line-height: 1;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
         .countdown-label {
             font-size: 0.85rem;
-            color: #f107a3;
+            color: #ffcc00;
             margin-top: 5px;
             font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
         }
 
         .progress-section {
@@ -135,32 +288,39 @@
 
         .progress-title {
             font-size: 1.1rem;
-            color: #7b2ff7;
+            color: white;
             margin-bottom: 12px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
         }
 
         .progress-bar {
             height: 16px;
-            background-color: #eee;
+            background-color: rgba(255, 255, 255, 0.1);
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(to right, #7b2ff7, #f107a3);
+            background: linear-gradient(to right, 
+                rgba(123, 47, 247, 0.8), 
+                rgba(241, 7, 163, 0.8)
+            );
             width: 0%;
             border-radius: 8px;
             transition: width 0.5s ease;
+            box-shadow: 0 0 15px rgba(123, 47, 247, 0.4);
         }
 
         .progress-text {
             text-align: center;
             margin-top: 8px;
             font-weight: 600;
-            color: #555;
+            color: rgba(255, 255, 255, 0.9);
             font-size: 0.9rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
         }
 
         /* Daily Tracker Styles */
@@ -183,21 +343,25 @@
         .stat-box {
             text-align: center;
             padding: 12px 8px;
-            background: rgba(123, 47, 247, 0.1);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
             flex: 1;
             min-width: 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
         }
 
         .stat-value {
             font-size: 1.5rem;
             font-weight: 800;
-            color: #7b2ff7;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
         }
 
         .stat-label {
             font-size: 0.8rem;
-            color: #666;
+            color: rgba(255, 255, 255, 0.8);
             margin-top: 3px;
         }
 
@@ -211,14 +375,17 @@
         .day-header {
             text-align: center;
             font-weight: 600;
-            color: #7b2ff7;
+            color: white;
             padding: 6px 0;
             font-size: 0.8rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
         }
 
         .day-box {
             aspect-ratio: 1;
-            background-color: #f8f8f8;
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 8px;
             display: flex;
             flex-direction: column;
@@ -226,42 +393,68 @@
             align-items: center;
             cursor: pointer;
             transition: all 0.2s ease;
-            border: 2px solid transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
             position: relative;
             overflow: hidden;
             touch-action: manipulation;
+            backdrop-filter: blur(5px);
+        }
+
+        .day-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.05);
         }
 
         .day-box:active {
             transform: scale(0.95);
+            background: rgba(255, 255, 255, 0.15);
         }
 
         .day-box.checked {
-            background: linear-gradient(135deg, #7b2ff7, #f107a3);
+            background: linear-gradient(
+                135deg, 
+                rgba(123, 47, 247, 0.7), 
+                rgba(241, 7, 163, 0.7)
+            );
             color: white;
-            border-color: #7b2ff7;
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 5px 15px rgba(123, 47, 247, 0.4);
         }
 
         .day-box.today {
             border-color: #ffcc00;
-            background-color: #fff9e6;
+            background: rgba(255, 204, 0, 0.2);
+            box-shadow: 0 5px 15px rgba(255, 204, 0, 0.3);
         }
 
         .day-box.future {
-            background-color: #f0f0f0;
-            color: #aaa;
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.5);
             cursor: not-allowed;
+            opacity: 0.6;
         }
 
         .day-number {
             font-size: 1rem;
             font-weight: 700;
             margin-bottom: 2px;
+            position: relative;
+            z-index: 1;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
         }
 
         .day-label {
             font-size: 0.65rem;
             opacity: 0.8;
+            position: relative;
+            z-index: 1;
+            color: white;
         }
 
         .checkmark {
@@ -272,6 +465,8 @@
             font-size: 0.7rem;
             opacity: 0;
             transition: opacity 0.3s;
+            z-index: 2;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
         }
 
         .day-box.checked .checkmark {
@@ -298,6 +493,25 @@
             gap: 8px;
             font-size: 1rem;
             touch-action: manipulation;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
         }
 
         .btn:active {
@@ -305,107 +519,138 @@
         }
 
         .btn-primary {
-            background: linear-gradient(to right, #7b2ff7, #f107a3);
+            background: linear-gradient(
+                to right, 
+                rgba(123, 47, 247, 0.7), 
+                rgba(241, 7, 163, 0.7)
+            );
             color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
 
         .btn-secondary {
-            background-color: #f0f0f0;
-            color: #555;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
         }
 
         .message-section {
             text-align: center;
             padding: 20px;
-            background-color: rgba(123, 47, 247, 0.05);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 12px;
             margin-top: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
         }
 
         .message {
             font-size: 1.2rem;
-            color: #7b2ff7;
+            color: white;
             font-weight: 600;
             margin-bottom: 8px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
         }
 
         .motivation-text {
-            color: #666;
+            color: rgba(255, 255, 255, 0.9);
             font-style: italic;
             font-size: 0.9rem;
             margin-top: 5px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
         }
 
         .today-date {
             text-align: center;
             padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
         }
 
         #current-date {
             font-size: 1.5rem;
-            color: #7b2ff7;
+            color: white;
             font-weight: 700;
             margin-bottom: 5px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
         }
 
         #current-day {
             font-size: 1rem;
-            color: #666;
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
         }
 
         .achievement-section {
             text-align: center;
             padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
         }
 
         #achievement-text {
             font-size: 1.1rem;
-            color: #7b2ff7;
+            color: white;
             font-weight: 600;
             margin-bottom: 12px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
         }
 
         #achievement-progress {
             height: 8px;
-            background-color: #eee;
+            background-color: rgba(255, 255, 255, 0.1);
             border-radius: 4px;
             overflow: hidden;
             margin: 0 auto 8px;
             max-width: 250px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         #achievement-fill {
             height: 100%;
-            background: linear-gradient(to right, #7b2ff7, #f107a3);
+            background: linear-gradient(to right, 
+                rgba(123, 47, 247, 0.8), 
+                rgba(241, 7, 163, 0.8)
+            );
             width: 0%;
+            box-shadow: 0 0 10px rgba(123, 47, 247, 0.4);
         }
 
         #achievement-percent {
-            color: #666;
+            color: white;
             font-weight: 600;
             font-size: 0.9rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
         }
 
         .instructions {
             font-size: 0.8rem;
-            color: #666;
+            color: rgba(255, 255, 255, 0.8);
             text-align: center;
             margin-top: 15px;
             padding: 10px;
-            background: rgba(123, 47, 247, 0.05);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
         }
 
         footer {
             text-align: center;
             padding: 20px 15px;
-            color: #777;
+            color: rgba(255, 255, 255, 0.8);
             font-size: 0.85rem;
-            border-top: 1px solid #eee;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
         }
 
         .heart {
-            color: #f107a3;
+            color: #ffcc00;
             animation: heartbeat 1.5s infinite;
             display: inline-block;
         }
@@ -428,28 +673,108 @@
         }
 
         .calendar-container::-webkit-scrollbar-track {
-            background: #f1f1f1;
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 2px;
         }
 
         .calendar-container::-webkit-scrollbar-thumb {
-            background: #7b2ff7;
+            background: linear-gradient(to right, 
+                rgba(123, 47, 247, 0.8), 
+                rgba(241, 7, 163, 0.8)
+            );
             border-radius: 2px;
         }
 
-        /* Add to home screen prompt */
-        .install-prompt {
-            background: rgba(123, 47, 247, 0.1);
-            border: 2px dashed #7b2ff7;
-            border-radius: 12px;
+        /* File upload section */
+        .file-upload {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.7);
             padding: 15px;
-            margin: 15px 0;
-            text-align: center;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 300px;
             display: none;
         }
 
-        .install-prompt.show {
+        .file-upload.show {
             display: block;
+        }
+
+        .upload-btn {
+            background: linear-gradient(135deg, #7b2ff7, #f107a3);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .upload-instructions {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        /* Loading animation */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            z-index: 9999;
+            flex-direction: column;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #7b2ff7;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Photo info display */
+        .photo-info {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            text-align: center;
+            max-width: 80%;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .photo-info.show {
+            opacity: 0.8;
         }
 
         /* Touch-friendly improvements */
@@ -480,6 +805,12 @@
             
             .day-label {
                 font-size: 0.6rem;
+            }
+            
+            .file-upload {
+                left: 10px;
+                right: 10px;
+                max-width: calc(100% - 20px);
             }
         }
 
@@ -517,11 +848,64 @@
     </style>
 </head>
 <body>
+    <!-- Background Slideshow -->
+    <div class="slideshow" id="slideshow">
+        <!-- 
+        ==============================================
+        FOR LOCAL IMAGES - KEEP THIS SECTION EMPTY
+        Images will be loaded dynamically from localStorage
+        ==============================================
+        -->
+    </div>
+
+    <!-- Dark overlay -->
+    <div class="overlay"></div>
+
+    <!-- File Upload Section (For you to add images) -->
+    <div class="file-upload" id="file-upload">
+        <button class="upload-btn" onclick="document.getElementById('image-upload').click()">
+            <i class="fas fa-images"></i> Add Photos
+        </button>
+        <input type="file" id="image-upload" accept="image/*" multiple style="display: none;">
+        <div class="upload-instructions">
+            <p>Add birthday photos from your computer</p>
+            <p>Select multiple images at once</p>
+        </div>
+    </div>
+
+    <!-- Photo info display -->
+    <div class="photo-info" id="photo-info">Photo 1 of 1</div>
+
+    <!-- Slideshow Controls -->
+    <div class="slideshow-controls">
+        <button onclick="previousSlide()" title="Previous Photo">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button onclick="toggleSlideshow()" id="play-pause-btn" title="Pause Slideshow">
+            <i class="fas fa-pause"></i>
+        </button>
+        <button onclick="nextSlide()" title="Next Photo">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+
+    <!-- Slide Indicators -->
+    <div class="slide-indicators" id="slide-indicators"></div>
+
+    <!-- Loading screen -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p style="color: white; margin-top: 20px; font-weight: 600; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">
+            Loading Birthday Countdown...
+        </p>
+    </div>
+
+    <!-- Main App Container -->
     <div class="container">
         <header>
             <i class="fas fa-birthday-cake birthday-icon"></i>
-            <h1>Birthday Countdown Tracker</h1>
-            <p class="subtitle">Mark each day until December 28th!</p>
+            <h1>🎂 Birthday Countdown</h1>
+            <p class="subtitle">Counting down to December 28th!</p>
         </header>
         
         <div class="main-content">
@@ -609,7 +993,7 @@
                 </div>
                 
                 <div class="instructions">
-                    <i class="fas fa-info-circle" style="color: #7b2ff7;"></i> 
+                    <i class="fas fa-info-circle" style="color: #ffcc00;"></i> 
                     Tap past days to check them off. Each check brings you closer!
                 </div>
             </div>
@@ -634,14 +1018,239 @@
         <footer>
             <p>Made with <span class="heart">♥</span> for December 28th</p>
             <p>Progress saves automatically</p>
-            <p style="font-size: 0.75rem; margin-top: 8px; color: #999;">
+            <p style="font-size: 0.75rem; margin-top: 8px; color: rgba(255, 255, 255, 0.7);">
                 Save to home screen for quick access
             </p>
         </footer>
     </div>
 
     <script>
-        // Mobile-optimized Birthday Countdown Tracker
+        // ==============================================
+        // LOCAL IMAGE HANDLING
+        // ==============================================
+        
+        // Storage key for saved images
+        const IMAGE_STORAGE_KEY = 'birthdaySlideshowImages';
+        
+        // Default fallback images if no local images
+        const DEFAULT_IMAGES = [
+            'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyMCIgaGVpZ2h0PSIxMDgwIiB2aWV3Qm94PSIwIDAgMTkyMCAxMDgwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cmVjdCB3aWR0aD0iMTkyMCIgaGVpZ2h0PSIxMDgwIiBmaWxsPSIjNmExMWNiIi8+Cjx0ZXh0IHg9Ijk2MCIgeT0iNTQwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iNjAiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+RGlzbmV5IEJpcnRoZGF5IPCfkrDwn5KwPC90ZXh0Pgo8L3N2Zz4=',
+            'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyMCIgaGVpZ2h0PSIxMDgwIiB2aWV3Qm94PSIwIDAgMTkyMCAxMDgwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cmVjdCB3aWR0aD0iMTkyMCIgaGVpZ2h0PSIxMDgwIiBmaWxsPSIjMjU3NWZjIi8+Cjx0ZXh0IHg9Ijk2MCIgeT0iNTQwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iNjAiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+RGlzbmV5IEJpcnRoZGF5IPCfkrDwn5KwPC90ZXh0Pgo8L3N2Zz4='
+        ];
+        
+        // Load saved images from localStorage
+        function loadSavedImages() {
+            const savedImages = localStorage.getItem(IMAGE_STORAGE_KEY);
+            if (savedImages) {
+                return JSON.parse(savedImages);
+            }
+            return DEFAULT_IMAGES;
+        }
+        
+        // Save images to localStorage
+        function saveImages(images) {
+            localStorage.setItem(IMAGE_STORAGE_KEY, JSON.stringify(images));
+        }
+        
+        // Convert file to data URL
+        function fileToDataURL(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => resolve(e.target.result);
+                reader.onerror = (e) => reject(e);
+                reader.readAsDataURL(file);
+            });
+        }
+        
+        // Handle image upload
+        async function handleImageUpload(files) {
+            const images = [];
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                if (file.type.startsWith('image/')) {
+                    try {
+                        const dataURL = await fileToDataURL(file);
+                        images.push(dataURL);
+                    } catch (error) {
+                        console.error('Error reading file:', error);
+                    }
+                }
+            }
+            
+            if (images.length > 0) {
+                // Save images
+                saveImages(images);
+                
+                // Update slideshow
+                updateSlideshow(images);
+                
+                // Show success message
+                showToast(`Added ${images.length} photo(s) to slideshow!`);
+                
+                // Hide upload panel
+                //document.getElementById('file-upload').classList.remove('show');
+            }
+        }
+        
+        // Update slideshow with images
+        function updateSlideshow(images) {
+            const slideshow = document.getElementById('slideshow');
+            slideshow.innerHTML = '';
+            
+            images.forEach((imageData, index) => {
+                const slide = document.createElement('div');
+                slide.className = 'slide';
+                slide.style.backgroundImage = `url('${imageData}')`;
+                if (index === 0) {
+                    slide.classList.add('active');
+                }
+                slideshow.appendChild(slide);
+            });
+            
+            // Reinitialize slideshow
+            initSlideshow();
+        }
+        
+        // ==============================================
+        // BACKGROUND SLIDESHOW FUNCTIONALITY
+        // ==============================================
+        
+        let currentSlide = 0;
+        let slideshowInterval;
+        let isPlaying = true;
+        let slides = [];
+        const slideInterval = 5000; // 5 seconds per slide
+        
+        // Initialize slideshow
+        function initSlideshow() {
+            slides = document.querySelectorAll('.slide');
+            
+            // Show first slide if exists
+            if (slides.length > 0) {
+                slides[0].classList.add('active');
+            }
+            
+            // Create indicators
+            createIndicators();
+            
+            // Start slideshow
+            startSlideshow();
+            
+            // Update photo info
+            updatePhotoInfo();
+        }
+        
+        // Create slide indicators
+        function createIndicators() {
+            const indicatorsContainer = document.getElementById('slide-indicators');
+            indicatorsContainer.innerHTML = '';
+            
+            slides.forEach((_, index) => {
+                const indicator = document.createElement('div');
+                indicator.className = 'indicator';
+                if (index === currentSlide) {
+                    indicator.classList.add('active');
+                }
+                indicator.addEventListener('click', () => {
+                    goToSlide(index);
+                });
+                indicatorsContainer.appendChild(indicator);
+            });
+        }
+        
+        // Start slideshow
+        function startSlideshow() {
+            if (slideshowInterval) {
+                clearInterval(slideshowInterval);
+            }
+            
+            if (isPlaying && slides.length > 1) {
+                slideshowInterval = setInterval(() => {
+                    nextSlide();
+                }, slideInterval);
+            }
+            
+            // Update play/pause button
+            const playPauseBtn = document.getElementById('play-pause-btn');
+            if (playPauseBtn) {
+                playPauseBtn.innerHTML = isPlaying ? 
+                    '<i class="fas fa-pause"></i>' : 
+                    '<i class="fas fa-play"></i>';
+                playPauseBtn.title = isPlaying ? 'Pause Slideshow' : 'Play Slideshow';
+            }
+        }
+        
+        // Go to specific slide
+        function goToSlide(index) {
+            // Remove active class from all slides
+            slides.forEach(slide => slide.classList.remove('active'));
+            
+            // Update current slide
+            currentSlide = index;
+            if (currentSlide >= slides.length) currentSlide = 0;
+            if (currentSlide < 0) currentSlide = slides.length - 1;
+            
+            // Add active class to current slide
+            slides[currentSlide].classList.add('active');
+            
+            // Update indicators
+            updateIndicators();
+            
+            // Update photo info
+            updatePhotoInfo();
+            
+            // Reset slideshow interval if playing
+            if (isPlaying) {
+                startSlideshow();
+            }
+        }
+        
+        // Next slide
+        function nextSlide() {
+            goToSlide(currentSlide + 1);
+        }
+        
+        // Previous slide
+        function previousSlide() {
+            goToSlide(currentSlide - 1);
+        }
+        
+        // Toggle slideshow play/pause
+        function toggleSlideshow() {
+            isPlaying = !isPlaying;
+            startSlideshow();
+        }
+        
+        // Update indicators
+        function updateIndicators() {
+            const indicators = document.querySelectorAll('.indicator');
+            indicators.forEach((indicator, index) => {
+                if (index === currentSlide) {
+                    indicator.classList.add('active');
+                } else {
+                    indicator.classList.remove('active');
+                }
+            });
+        }
+        
+        // Update photo info
+        function updatePhotoInfo() {
+            const photoInfo = document.getElementById('photo-info');
+            if (photoInfo && slides.length > 0) {
+                photoInfo.textContent = `Photo ${currentSlide + 1} of ${slides.length}`;
+                photoInfo.classList.add('show');
+                
+                // Hide after 3 seconds
+                setTimeout(() => {
+                    photoInfo.classList.remove('show');
+                }, 3000);
+            }
+        }
+        
+        // ==============================================
+        // BIRTHDAY COUNTDOWN FUNCTIONALITY
+        // ==============================================
         
         // Set the target birthday date (December 28th)
         const TARGET_MONTH = 11; // December is month 11 (0-indexed)
@@ -882,6 +1491,9 @@
                         dayBox.style.transform = 'scale(1)';
                     }, 150);
                 }
+                
+                // Play celebration sound
+                playCelebrationSound();
             } else {
                 // Remove from checked days
                 checkedDays.splice(index, 1);
@@ -897,6 +1509,34 @@
             updateAchievement();
         }
         
+        // Play celebration sound
+        function playCelebrationSound() {
+            try {
+                // Create a simple celebration sound
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                // Play a cheerful melody
+                oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+                oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1); // E5
+                oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2); // G5
+                
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.3);
+            } catch (e) {
+                // Audio not supported, skip
+            }
+        }
+        
         // Show toast message
         function showToast(message) {
             // Create toast element
@@ -906,7 +1546,7 @@
                 bottom: 20px;
                 left: 50%;
                 transform: translateX(-50%);
-                background: rgba(0, 0, 0, 0.8);
+                background: linear-gradient(135deg, rgba(123, 47, 247, 0.9), rgba(241, 7, 163, 0.9));
                 color: white;
                 padding: 12px 20px;
                 border-radius: 10px;
@@ -915,6 +1555,9 @@
                 max-width: 80%;
                 text-align: center;
                 animation: fadeInOut 3s ease;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.3);
             `;
             
             // Add keyframes for animation
@@ -967,17 +1610,21 @@
                 const achievementText = document.getElementById('achievement-text');
                 
                 if (achievementPercent === 0) {
-                    achievementText.textContent = "Start tracking!";
+                    achievementText.textContent = "🎯 Start tracking!";
                 } else if (achievementPercent < 25) {
-                    achievementText.textContent = "Getting started!";
+                    achievementText.textContent = "🚀 Getting started!";
                 } else if (achievementPercent < 50) {
-                    achievementText.textContent = "Good progress!";
+                    achievementText.textContent = "🌟 Good progress!";
                 } else if (achievementPercent < 75) {
-                    achievementText.textContent = "Halfway there!";
+                    achievementText.textContent = "🔥 Halfway there!";
                 } else if (achievementPercent < 100) {
-                    achievementText.textContent = "Almost perfect!";
+                    achievementText.textContent = "💎 Almost perfect!";
                 } else {
                     achievementText.textContent = "🎉 Perfect! 🎉";
+                    // Add extra celebration for 100%
+                    if (checkedCount > 0 && checkedCount === totalDays) {
+                        setTimeout(celebrateBirthday, 500);
+                    }
                 }
             }
         }
@@ -1013,10 +1660,15 @@
         
         // Celebrate birthday with confetti
         function celebrateBirthday() {
+            // Create floating balloons
+            for (let i = 0; i < 15; i++) {
+                createBalloon();
+            }
+            
             // Create confetti effect
             const colors = ['#7b2ff7', '#f107a3', '#ffcc00', '#00ff88', '#ff9a9e'];
             
-            for (let i = 0; i < 100; i++) {
+            for (let i = 0; i < 150; i++) {
                 const confetti = document.createElement('div');
                 confetti.style.cssText = `
                     position: fixed;
@@ -1028,6 +1680,7 @@
                     left: ${Math.random() * 100}%;
                     z-index: 1000;
                     pointer-events: none;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
                 `;
                 
                 document.body.appendChild(confetti);
@@ -1044,9 +1697,56 @@
                 // Remove after animation
                 animation.onfinish = () => confetti.remove();
             }
+            
+            // Haptic feedback
+            if (navigator.vibrate) {
+                navigator.vibrate([100, 50, 100, 50, 200]);
+            }
+            
+            // Play birthday sound
+            playBirthdaySound();
         }
         
-        // Set up event listeners
+        // ==============================================
+        // INITIALIZATION
+        // ==============================================
+        
+        // Initialize when page loads
+        window.addEventListener('load', function() {
+            // Load saved images or use defaults
+            const savedImages = loadSavedImages();
+            
+            // Update slideshow with loaded images
+            updateSlideshow(savedImages);
+            
+            // Initialize the countdown app
+            setTimeout(() => {
+                updateCurrentDate();
+                updateCountdown();
+                generateCalendar();
+                updateAchievement();
+                
+                // Update countdown every second
+                const countdownInterval = setInterval(updateCountdown, 1000);
+                
+                // Update current date every minute
+                setInterval(updateCurrentDate, 60000);
+                
+                // Hide loading screen
+                document.getElementById('loading').style.display = 'none';
+            }, 1000);
+            
+            // Set up image upload handler
+            document.getElementById('image-upload').addEventListener('change', async function(e) {
+                if (e.target.files.length > 0) {
+                    await handleImageUpload(e.target.files);
+                    // Clear file input
+                    e.target.value = '';
+                }
+            });
+        });
+        
+        // Set up event listeners for buttons
         document.getElementById('check-today-btn').addEventListener('click', markToday);
         document.getElementById('reset-btn').addEventListener('click', resetAll);
         
@@ -1061,28 +1761,9 @@
             });
         });
         
-        // Initialize the app
-        updateCurrentDate();
-        updateCountdown();
-        generateCalendar();
-        updateAchievement();
-        
-        // Update countdown every second
-        const countdownInterval = setInterval(updateCountdown, 1000);
-        
-        // Update current date every minute (in case day changes)
-        setInterval(updateCurrentDate, 60000);
-        
-        // Check for PWA install prompt
-        window.addEventListener('beforeinstallprompt', (e) => {
-            // Prevent the mini-infobar from appearing on mobile
-            e.preventDefault();
-            // Show our custom install prompt
-            const installPrompt = document.querySelector('.install-prompt');
-            if (installPrompt) {
-                installPrompt.classList.add('show');
-            }
-        });
+        // Show upload panel (for you to add images before sending)
+        // Comment this line out before sending to the birthday person
+        document.getElementById('file-upload').classList.add('show');
     </script>
 </body>
 </html>
