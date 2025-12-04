@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎂 Birthday Countdown Tracker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(to right, #7b2ff7, #f107a3);
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .birthday-icon {
+            position: absolute;
+            font-size: 6rem;
+            opacity: 0.15;
+            top: 10px;
+            right: 20px;
+            transform: rotate(20deg);
+        }
+
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 30px;
+            gap: 30px;
+        }
+
+        .left-panel {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .right-panel {
+            flex: 1.2;
+            min-width: 300px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .section-title {
+            font-size: 1.6rem;
+            color: #7b2ff7;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: #f107a3;
+        }
+
+        .countdown-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .countdown-box {
+            background: white;
+            border-radius: 15px;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 8px 20px rgba(123, 47, 247, 0.15);
+            border: 2px solid #f0f0f0;
+            transition: transform 0.3s ease;
+        }
+
+        .countdown-box:hover {
+            transform: translateY(-5px);
+            border-color: #7b2ff7;
+        }
+
+        .countdown-value {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #7b2ff7;
+            line-height: 1;
+        }
+
+        .countdown-label {
+            font-size: 0.9rem;
+            color: #f107a3;
+            margin-top: 5px;
+            font-weight: 600;
+        }
+
+        .progress-section {
+            margin-top: 20px;
+        }
+
+        .progress-title {
+            font-size: 1.2rem;
+            color: #7b2ff7;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar {
+            height: 20px;
+            background-color: #eee;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, #7b2ff7, #f107a3);
+            width: 0%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 10px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        /* Daily Tracker Styles */
+        .tracker-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .tracker-stats {
+            display: flex;
+            gap: 20px;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 10px 15px;
+            background: rgba(123, 47, 247, 0.1);
+            border-radius: 10px;
+            min-width: 80px;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #7b2ff7;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .day-header {
+            text-align: center;
+            font-weight: 600;
+            color: #7b2ff7;
+            padding: 8px;
+            font-size: 0.9rem;
+        }
+
+        .day-box {
+            aspect-ratio: 1;
+            background-color: #f8f8f8;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .day-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .day-box.checked {
+            background: linear-gradient(135deg, #7b2ff7, #f107a3);
+            color: white;
+            border-color: #7b2ff7;
+        }
+
+        .day-box.today {
+            border-color: #ffcc00;
+            background-color: #fff9e6;
+        }
+
+        .day-box.future {
+            background-color: #f0f0f0;
+            color: #aaa;
+            cursor: not-allowed;
+        }
+
+        .day-number {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+
+        .day-label {
+            font-size: 0.7rem;
+            opacity: 0.8;
+        }
+
+        .checkmark {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            color: white;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .day-box.checked .checkmark {
+            opacity: 1;
+        }
+
+        .day-box.today .checkmark {
+            color: #ffcc00;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, #7b2ff7, #f107a3);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(123, 47, 247, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: #555;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e0e0e0;
+        }
+
+        .message-section {
+            text-align: center;
+            padding: 20px;
+            background-color: rgba(123, 47, 247, 0.05);
+            border-radius: 15px;
+            margin-top: 10px;
+        }
+
+        .message {
+            font-size: 1.4rem;
+            color: #7b2ff7;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .motivation-text {
+            color: #666;
+            font-style: italic;
+            margin-top: 10px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+        }
+
+        .heart {
+            color: #f107a3;
+            animation: heartbeat 1.5s infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+                padding: 20px;
+            }
+            
+            .countdown-box {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .countdown-value {
+                font-size: 2.2rem;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .calendar-grid {
+                grid-template-columns: repeat(7, 1fr);
+                gap: 8px;
+            }
+            
+            .day-box {
+                border-radius: 8px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .countdown-box {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .countdown-value {
+                font-size: 1.8rem;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .day-number {
+                font-size: 1.1rem;
+            }
+            
+            .day-label {
+                font-size: 0.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <i class="fas fa-birthday-cake birthday-icon"></i>
+            <h1>Birthday Countdown Tracker</h1>
+            <p class="subtitle">Mark each day as you count down to December 28th!</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="left-panel">
+                <div class="section">
+                    <h2 class="section-title"><i class="fas fa-clock"></i> Time Until Birthday</h2>
+                    
+                    <div class="countdown-container">
+                        <div class="countdown-box">
+                            <div class="countdown-value" id="days">00</div>
+                            <div class="countdown-label">Days</div>
+                        </div>
+                        <div class="countdown-box">
+                            <div class="countdown-value" id="hours">00</div>
+                            <div class="countdown-label">Hours</div>
+                        </div>
+                        <div class="countdown-box">
+                            <div class="countdown-value" id="minutes">00</div>
+                            <div class="countdown-label">Minutes</div>
+                        </div>
+                        <div class="countdown-box">
+                            <div class="countdown-value" id="seconds">00</div>
+                            <div class="countdown-label">Seconds</div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-section">
+                        <h3 class="progress-title">Year Progress</h3>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progress-fill"></div>
+                        </div>
+                        <div class="progress-text" id="progress-text">0% of the year has passed</div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h2 class="section-title"><i class="fas fa-calendar-alt"></i> Today's Date</h2>
+                    <div style="text-align: center; padding: 20px;">
+                        <div id="current-date" style="font-size: 2rem; color: #7b2ff7; font-weight: 700; margin-bottom: 10px;"></div>
+                        <div id="current-day" style="font-size: 1.2rem; color: #666;"></div>
+                    </div>
+                </div>
+                
+                <div class="message-section">
+                    <p class="message" id="countdown-message">The countdown is on!</p>
+                    <p class="motivation-text" id="motivation-text">Mark today as checked to track your progress!</p>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="section">
+                    <div class="tracker-header">
+                        <h2 class="section-title"><i class="fas fa-check-circle"></i> Daily Tracker</h2>
+                        <div class="tracker-stats">
+                            <div class="stat-box">
+                                <div class="stat-value" id="checked-days">0</div>
+                                <div class="stat-label">Checked</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-value" id="remaining-days">0</div>
+                                <div class="stat-label">Remaining</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="calendar-grid" id="calendar-grid">
+                        <!-- Day headers -->
+                        <div class="day-header">Sun</div>
+                        <div class="day-header">Mon</div>
+                        <div class="day-header">Tue</div>
+                        <div class="day-header">Wed</div>
+                        <div class="day-header">Thu</div>
+                        <div class="day-header">Fri</div>
+                        <div class="day-header">Sat</div>
+                        
+                        <!-- Calendar days will be generated by JavaScript -->
+                    </div>
+                    
+                    <div class="controls">
+                        <button class="btn btn-secondary" id="reset-btn">
+                            <i class="fas fa-redo"></i> Reset All
+                        </button>
+                        <button class="btn btn-primary" id="check-today-btn">
+                            <i class="fas fa-check"></i> Mark Today
+                        </button>
+                    </div>
+                    
+                    <div style="margin-top: 25px; text-align: center;">
+                        <p style="color: #666; font-size: 0.9rem;">
+                            <i class="fas fa-info-circle" style="color: #7b2ff7;"></i> 
+                            Click on past days to mark them as checked. Each checked day brings you closer to the birthday!
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h2 class="section-title"><i class="fas fa-award"></i> Achievement</h2>
+                    <div style="text-align: center; padding: 20px;">
+                        <div id="achievement-text" style="font-size: 1.3rem; color: #7b2ff7; font-weight: 600; margin-bottom: 15px;">
+                            Start tracking to earn achievements!
+                        </div>
+                        <div id="achievement-progress" style="height: 10px; background-color: #eee; border-radius: 5px; overflow: hidden;">
+                            <div id="achievement-fill" style="height: 100%; background: linear-gradient(to right, #7b2ff7, #f107a3); width: 0%;"></div>
+                        </div>
+                        <div id="achievement-percent" style="margin-top: 10px; color: #666; font-weight: 600;">0% complete</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Made with <span class="heart">♥</span> for the December 28th birthday celebration</p>
+            <p>Your progress is saved automatically - come back anytime!</p>
+        </footer>
+    </div>
+
+    <script>
+        // Set the target birthday date (December 28th)
+        const TARGET_MONTH = 11; // December is month 11 (0-indexed)
+        const TARGET_DAY = 28;
+        
+        // Get today's date
+        const today = new Date();
+        
+        // Storage key for saving checked days
+        const STORAGE_KEY = 'birthdayCountdownCheckedDays';
+        
+        // Initialize checked days from localStorage or empty array
+        let checkedDays = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+        
+        // Get next birthday date
+        function getNextBirthday() {
+            const now = new Date();
+            const currentYear = now.getFullYear();
+            const birthdayThisYear = new Date(currentYear, TARGET_MONTH, TARGET_DAY);
+            
+            // If birthday has already passed this year, set to next year
+            if (now > birthdayThisYear) {
+                return new Date(currentYear + 1, TARGET_MONTH, TARGET_DAY);
+            } else {
+                return birthdayThisYear;
+            }
+        }
+        
+        const birthdayDate = getNextBirthday();
+        
+        // Update the current date display
+        function updateCurrentDate() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+            document.getElementById('current-day').textContent = now.toLocaleDateString('en-US', { weekday: 'long' });
+        }
+        
+        // Update the countdown every second
+        function updateCountdown() {
+            const now = new Date();
+            const timeDifference = birthdayDate - now;
+            
+            // Calculate days, hours, minutes, seconds
+            const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+            
+            // Update the display
+            document.getElementById('days').textContent = days.toString().padStart(2, '0');
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+            
+            // Calculate progress percentage since last birthday
+            const lastBirthday = new Date(birthdayDate.getFullYear() - 1, TARGET_MONTH, TARGET_DAY);
+            const nextBirthday = birthdayDate;
+            const totalYearTime = nextBirthday - lastBirthday;
+            const timeSinceLastBirthday = now - lastBirthday;
+            const progressPercentage = Math.min(100, (timeSinceLastBirthday / totalYearTime * 100).toFixed(1));
+            
+            // Update progress bar and text
+            document.getElementById('progress-fill').style.width = `${progressPercentage}%`;
+            document.getElementById('progress-text').textContent = `${progressPercentage}% of the year has passed since last birthday`;
+            
+            // Update message based on time remaining
+            updateMessage(days, hours);
+            
+            // If birthday has arrived
+            if (timeDifference < 0) {
+                clearInterval(countdownInterval);
+                document.getElementById('days').textContent = "00";
+                document.getElementById('hours').textContent = "00";
+                document.getElementById('minutes').textContent = "00";
+                document.getElementById('seconds').textContent = "00";
+                document.getElementById('countdown-message').textContent = "🎉 Happy Birthday! 🎉";
+                document.getElementById('progress-fill').style.width = "100%";
+                document.getElementById('progress-text').textContent = "100% - It's your birthday!";
+                document.getElementById('motivation-text').textContent = "You made it! Time to celebrate!";
+            }
+        }
+        
+        // Update message based on time remaining
+        function updateMessage(days, hours) {
+            const messageElement = document.getElementById('countdown-message');
+            const motivationElement = document.getElementById('motivation-text');
+            
+            if (days > 30) {
+                messageElement.textContent = "The countdown is on! Start planning the celebration!";
+                motivationElement.textContent = "Check off each day to track your journey!";
+            } else if (days > 7) {
+                messageElement.textContent = "Getting closer! Just a few weeks to go!";
+                motivationElement.textContent = "Every checked day is a step closer!";
+            } else if (days > 1) {
+                messageElement.textContent = "Almost there! Get ready to celebrate!";
+                motivationElement.textContent = "Mark today to keep your streak going!";
+            } else if (days === 1) {
+                messageElement.textContent = "Tomorrow is the big day! 🎉";
+                motivationElement.textContent = "One more day to check off!";
+            } else if (days === 0 && hours > 12) {
+                messageElement.textContent = "Today's the day! Let's celebrate! 🥳";
+                motivationElement.textContent = "Today's the last day to check!";
+            } else if (days === 0 && hours <= 12) {
+                messageElement.textContent = "Just a few hours to go! Get excited! 🎂";
+                motivationElement.textContent = "Almost birthday time!";
+            }
+        }
+        
+        // Generate the calendar for the countdown period
+        function generateCalendar() {
+            const calendarGrid = document.getElementById('calendar-grid');
+            
+            // Clear existing days (keep headers)
+            while (calendarGrid.children.length > 7) {
+                calendarGrid.removeChild(calendarGrid.lastChild);
+            }
+            
+            // Calculate the start date (30 days before birthday, or from today if closer)
+            const startDate = new Date(birthdayDate);
+            startDate.setDate(birthdayDate.getDate() - 30);
+            
+            // If today is more than 30 days before birthday, start from today
+            const today = new Date();
+            if (today > startDate) {
+                startDate.setTime(today.getTime());
+                startDate.setHours(0, 0, 0, 0);
+            }
+            
+            // Calculate total days in countdown
+            const totalDays = Math.ceil((birthdayDate - startDate) / (1000 * 60 * 60 * 24));
+            
+            // Update remaining days stat
+            document.getElementById('remaining-days').textContent = totalDays;
+            
+            // Generate day boxes
+            for (let i = 0; i < totalDays; i++) {
+                const currentDate = new Date(startDate);
+                currentDate.setDate(startDate.getDate() + i);
+                
+                const dayBox = document.createElement('div');
+                dayBox.className = 'day-box';
+                
+                // Check if this day is in the past
+                const isPast = currentDate < today;
+                const isToday = currentDate.toDateString() === today.toDateString();
+                const isFuture = currentDate > today;
+                
+                // Format date for storage comparison
+                const dateString = currentDate.toISOString().split('T')[0];
+                
+                // Check if this day is already checked
+                const isChecked = checkedDays.includes(dateString);
+                
+                // Set appropriate class
+                if (isChecked) {
+                    dayBox.classList.add('checked');
+                } else if (isToday) {
+                    dayBox.classList.add('today');
+                } else if (isFuture) {
+                    dayBox.classList.add('future');
+                }
+                
+                // Add day number and label
+                const dayNumber = document.createElement('div');
+                dayNumber.className = 'day-number';
+                dayNumber.textContent = currentDate.getDate();
+                
+                const dayLabel = document.createElement('div');
+                dayLabel.className = 'day-label';
+                dayLabel.textContent = currentDate.toLocaleDateString('en-US', { month: 'short' });
+                
+                const checkmark = document.createElement('div');
+                checkmark.className = 'checkmark';
+                checkmark.innerHTML = '<i class="fas fa-check"></i>';
+                
+                dayBox.appendChild(dayNumber);
+                dayBox.appendChild(dayLabel);
+                dayBox.appendChild(checkmark);
+                
+                // Add click event for past days (not future)
+                if (isPast || isToday) {
+                    dayBox.style.cursor = 'pointer';
+                    dayBox.addEventListener('click', function() {
+                        toggleDay(dateString, currentDate);
+                    });
+                } else {
+                    dayBox.style.cursor = 'not-allowed';
+                }
+                
+                calendarGrid.appendChild(dayBox);
+            }
+            
+            // Update stats
+            updateStats();
+        }
+        
+        // Toggle day checked/unchecked
+        function toggleDay(dateString, dateObj) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            // Only allow checking past days and today (not future)
+            if (dateObj > today) {
+                alert("You can only check off days that have already passed!");
+                return;
+            }
+            
+            const index = checkedDays.indexOf(dateString);
+            
+            if (index === -1) {
+                // Add to checked days
+                checkedDays.push(dateString);
+                
+                // Play a subtle sound effect (if allowed)
+                playCheckSound();
+            } else {
+                // Remove from checked days
+                checkedDays.splice(index, 1);
+            }
+            
+            // Save to localStorage
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(checkedDays));
+            
+            // Regenerate calendar to reflect changes
+            generateCalendar();
+            
+            // Update achievement
+            updateAchievement();
+        }
+        
+        // Play check sound
+        function playCheckSound() {
+            // Create a simple audio context for a beep sound
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = 800;
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.2);
+            } catch (e) {
+                // Audio context not supported, skip sound
+            }
+        }
+        
+        // Update stats display
+        function updateStats() {
+            const checkedCount = checkedDays.length;
+            const totalDays = parseInt(document.getElementById('remaining-days').textContent);
+            
+            document.getElementById('checked-days').textContent = checkedCount;
+            document.getElementById('remaining-days').textContent = totalDays;
+        }
+        
+        // Update achievement progress
+        function updateAchievement() {
+            const checkedCount = checkedDays.length;
+            const totalDays = parseInt(document.getElementById('remaining-days').textContent);
+            
+            if (totalDays > 0) {
+                const achievementPercent = Math.min(100, Math.round((checkedCount / totalDays) * 100));
+                
+                document.getElementById('achievement-fill').style.width = `${achievementPercent}%`;
+                document.getElementById('achievement-percent').textContent = `${achievementPercent}% complete`;
+                
+                // Update achievement text based on progress
+                const achievementText = document.getElementById('achievement-text');
+                
+                if (achievementPercent === 0) {
+                    achievementText.textContent = "Start tracking to earn achievements!";
+                } else if (achievementPercent < 25) {
+                    achievementText.textContent = "Getting started! Keep going!";
+                } else if (achievementPercent < 50) {
+                    achievementText.textContent = "Good progress! You're on your way!";
+                } else if (achievementPercent < 75) {
+                    achievementText.textContent = "Great job! More than halfway there!";
+                } else if (achievementPercent < 100) {
+                    achievementText.textContent = "Almost there! Just a few more days!";
+                } else {
+                    achievementText.textContent = "🎉 Perfect! You tracked every day! 🎉";
+                }
+            }
+        }
+        
+        // Mark today as checked
+        function markToday() {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const todayString = today.toISOString().split('T')[0];
+            
+            if (!checkedDays.includes(todayString)) {
+                toggleDay(todayString, today);
+                alert("Today marked as checked! ✅");
+            } else {
+                alert("Today is already checked! ✅");
+            }
+        }
+        
+        // Reset all checked days
+        function resetAll() {
+            if (confirm("Are you sure you want to reset all checked days? This cannot be undone.")) {
+                checkedDays = [];
+                localStorage.removeItem(STORAGE_KEY);
+                generateCalendar();
+                updateAchievement();
+                alert("All checked days have been reset.");
+            }
+        }
+        
+        // Set up event listeners
+        document.getElementById('check-today-btn').addEventListener('click', markToday);
+        document.getElementById('reset-btn').addEventListener('click', resetAll);
+        
+        // Initialize the app
+        updateCurrentDate();
+        updateCountdown();
+        generateCalendar();
+        updateAchievement();
+        
+        // Update countdown every second
+        const countdownInterval = setInterval(updateCountdown, 1000);
+        
+        // Update current date every minute (in case day changes)
+        setInterval(updateCurrentDate, 60000);
+    </script>
+</body>
+</html>
