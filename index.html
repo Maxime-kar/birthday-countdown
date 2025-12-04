@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>🎂 Birthday Countdown Tracker</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -11,24 +11,24 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
             background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
+            padding: 15px;
             color: #333;
+            overflow-x: hidden;
         }
 
         .container {
-            max-width: 1000px;
             width: 100%;
-            background-color: rgba(255, 255, 255, 0.95);
-            border-radius: 25px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.98);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             overflow: hidden;
         }
 
@@ -36,65 +36,55 @@
             background: linear-gradient(to right, #7b2ff7, #f107a3);
             color: white;
             text-align: center;
-            padding: 30px 20px;
+            padding: 25px 15px;
             position: relative;
             overflow: hidden;
         }
 
         h1 {
-            font-size: 2.8rem;
-            margin-bottom: 10px;
+            font-size: 1.8rem;
+            margin-bottom: 8px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            padding: 0 10px;
         }
 
         .subtitle {
-            font-size: 1.2rem;
+            font-size: 1rem;
             opacity: 0.9;
-            max-width: 600px;
+            max-width: 100%;
             margin: 0 auto;
+            padding: 0 15px;
         }
 
         .birthday-icon {
             position: absolute;
-            font-size: 6rem;
+            font-size: 4rem;
             opacity: 0.15;
             top: 10px;
-            right: 20px;
+            right: 10px;
             transform: rotate(20deg);
         }
 
         .main-content {
-            display: flex;
-            flex-wrap: wrap;
-            padding: 30px;
-            gap: 30px;
-        }
-
-        .left-panel {
-            flex: 1;
-            min-width: 300px;
-        }
-
-        .right-panel {
-            flex: 1.2;
-            min-width: 300px;
+            padding: 20px 15px;
         }
 
         .section {
             background: white;
-            border-radius: 20px;
-            padding: 25px;
-            margin-bottom: 25px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid #f0f0f0;
         }
 
         .section-title {
-            font-size: 1.6rem;
+            font-size: 1.3rem;
             color: #7b2ff7;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .section-title i {
@@ -102,60 +92,57 @@
         }
 
         .countdown-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 15px;
         }
 
         .countdown-box {
             background: white;
-            border-radius: 15px;
-            width: 120px;
-            height: 120px;
+            border-radius: 12px;
+            padding: 20px 10px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 8px 20px rgba(123, 47, 247, 0.15);
+            box-shadow: 0 5px 15px rgba(123, 47, 247, 0.1);
             border: 2px solid #f0f0f0;
-            transition: transform 0.3s ease;
+            transition: transform 0.2s ease;
         }
 
-        .countdown-box:hover {
-            transform: translateY(-5px);
-            border-color: #7b2ff7;
+        .countdown-box:active {
+            transform: scale(0.98);
         }
 
         .countdown-value {
-            font-size: 2.8rem;
+            font-size: 2.2rem;
             font-weight: 800;
             color: #7b2ff7;
             line-height: 1;
         }
 
         .countdown-label {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #f107a3;
             margin-top: 5px;
             font-weight: 600;
         }
 
         .progress-section {
-            margin-top: 20px;
+            margin-top: 15px;
         }
 
         .progress-title {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: #7b2ff7;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         .progress-bar {
-            height: 20px;
+            height: 16px;
             background-color: #eee;
-            border-radius: 10px;
+            border-radius: 8px;
             overflow: hidden;
             box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
         }
@@ -164,15 +151,16 @@
             height: 100%;
             background: linear-gradient(to right, #7b2ff7, #f107a3);
             width: 0%;
-            border-radius: 10px;
+            border-radius: 8px;
             transition: width 0.5s ease;
         }
 
         .progress-text {
             text-align: center;
-            margin-top: 10px;
+            margin-top: 8px;
             font-weight: 600;
             color: #555;
+            font-size: 0.9rem;
         }
 
         /* Daily Tracker Styles */
@@ -180,66 +168,72 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .tracker-stats {
             display: flex;
-            gap: 20px;
+            gap: 12px;
+            width: 100%;
+            justify-content: space-between;
         }
 
         .stat-box {
             text-align: center;
-            padding: 10px 15px;
+            padding: 12px 8px;
             background: rgba(123, 47, 247, 0.1);
             border-radius: 10px;
-            min-width: 80px;
+            flex: 1;
+            min-width: 0;
         }
 
         .stat-value {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 800;
             color: #7b2ff7;
         }
 
         .stat-label {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #666;
+            margin-top: 3px;
         }
 
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 12px;
-            margin-bottom: 25px;
+            gap: 6px;
+            margin-bottom: 20px;
         }
 
         .day-header {
             text-align: center;
             font-weight: 600;
             color: #7b2ff7;
-            padding: 8px;
-            font-size: 0.9rem;
+            padding: 6px 0;
+            font-size: 0.8rem;
         }
 
         .day-box {
             aspect-ratio: 1;
             background-color: #f8f8f8;
-            border-radius: 12px;
+            border-radius: 8px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             border: 2px solid transparent;
             position: relative;
             overflow: hidden;
+            touch-action: manipulation;
         }
 
-        .day-box:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        .day-box:active {
+            transform: scale(0.95);
         }
 
         .day-box.checked {
@@ -260,22 +254,22 @@
         }
 
         .day-number {
-            font-size: 1.3rem;
+            font-size: 1rem;
             font-weight: 700;
-            margin-bottom: 3px;
+            margin-bottom: 2px;
         }
 
         .day-label {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             opacity: 0.8;
         }
 
         .checkmark {
             position: absolute;
-            top: 5px;
-            right: 5px;
+            top: 3px;
+            right: 3px;
             color: white;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             opacity: 0;
             transition: opacity 0.3s;
         }
@@ -284,26 +278,30 @@
             opacity: 1;
         }
 
-        .day-box.today .checkmark {
-            color: #ffcc00;
-        }
-
         .controls {
             display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
         }
 
         .btn {
-            padding: 12px 24px;
+            padding: 14px 20px;
             border: none;
             border-radius: 10px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
+            font-size: 1rem;
+            touch-action: manipulation;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
         }
 
         .btn-primary {
@@ -311,52 +309,105 @@
             color: white;
         }
 
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(123, 47, 247, 0.3);
-        }
-
         .btn-secondary {
             background-color: #f0f0f0;
             color: #555;
-        }
-
-        .btn-secondary:hover {
-            background-color: #e0e0e0;
         }
 
         .message-section {
             text-align: center;
             padding: 20px;
             background-color: rgba(123, 47, 247, 0.05);
-            border-radius: 15px;
+            border-radius: 12px;
             margin-top: 10px;
         }
 
         .message {
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             color: #7b2ff7;
             font-weight: 600;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .motivation-text {
             color: #666;
             font-style: italic;
-            margin-top: 10px;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .today-date {
+            text-align: center;
+            padding: 15px;
+        }
+
+        #current-date {
+            font-size: 1.5rem;
+            color: #7b2ff7;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        #current-day {
+            font-size: 1rem;
+            color: #666;
+        }
+
+        .achievement-section {
+            text-align: center;
+            padding: 15px;
+        }
+
+        #achievement-text {
+            font-size: 1.1rem;
+            color: #7b2ff7;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        #achievement-progress {
+            height: 8px;
+            background-color: #eee;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 0 auto 8px;
+            max-width: 250px;
+        }
+
+        #achievement-fill {
+            height: 100%;
+            background: linear-gradient(to right, #7b2ff7, #f107a3);
+            width: 0%;
+        }
+
+        #achievement-percent {
+            color: #666;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .instructions {
+            font-size: 0.8rem;
+            color: #666;
+            text-align: center;
+            margin-top: 15px;
+            padding: 10px;
+            background: rgba(123, 47, 247, 0.05);
+            border-radius: 8px;
         }
 
         footer {
             text-align: center;
-            padding: 20px;
+            padding: 20px 15px;
             color: #777;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             border-top: 1px solid #eee;
         }
 
         .heart {
             color: #f107a3;
             animation: heartbeat 1.5s infinite;
+            display: inline-block;
         }
 
         @keyframes heartbeat {
@@ -364,67 +415,104 @@
             50% { transform: scale(1.1); }
         }
 
-        /* Responsive Styles */
-        @media (max-width: 768px) {
-            .main-content {
-                flex-direction: column;
-                padding: 20px;
-            }
-            
-            .countdown-box {
-                width: 100px;
-                height: 100px;
-            }
-            
+        /* Calendar scrolling for many days */
+        .calendar-container {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+        }
+
+        .calendar-container::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .calendar-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 2px;
+        }
+
+        .calendar-container::-webkit-scrollbar-thumb {
+            background: #7b2ff7;
+            border-radius: 2px;
+        }
+
+        /* Add to home screen prompt */
+        .install-prompt {
+            background: rgba(123, 47, 247, 0.1);
+            border: 2px dashed #7b2ff7;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: center;
+            display: none;
+        }
+
+        .install-prompt.show {
+            display: block;
+        }
+
+        /* Touch-friendly improvements */
+        @media (max-width: 380px) {
             .countdown-value {
-                font-size: 2.2rem;
+                font-size: 1.8rem;
             }
             
             h1 {
-                font-size: 2.2rem;
+                font-size: 1.6rem;
             }
             
-            .calendar-grid {
-                grid-template-columns: repeat(7, 1fr);
-                gap: 8px;
-            }
-            
-            .day-box {
-                border-radius: 8px;
-            }
-            
-            .controls {
-                flex-direction: column;
-                gap: 10px;
+            .section {
+                padding: 15px;
             }
             
             .btn {
-                width: 100%;
-                justify-content: center;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .countdown-box {
-                width: 80px;
-                height: 80px;
+                padding: 12px 15px;
             }
             
-            .countdown-value {
-                font-size: 1.8rem;
-            }
-            
-            h1 {
-                font-size: 1.8rem;
+            .calendar-grid {
+                gap: 4px;
             }
             
             .day-number {
-                font-size: 1.1rem;
+                font-size: 0.9rem;
             }
             
             .day-label {
                 font-size: 0.6rem;
             }
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                max-width: 450px;
+            }
+        }
+
+        /* Landscape mode adjustments */
+        @media (max-height: 600px) and (orientation: landscape) {
+            .container {
+                max-width: 90%;
+            }
+            
+            .main-content {
+                padding: 15px;
+            }
+            
+            .section {
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+            
+            .countdown-container {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        /* Prevent text selection on buttons */
+        .btn, .day-box {
+            user-select: none;
+            -webkit-user-select: none;
         }
     </style>
 </head>
@@ -433,124 +521,128 @@
         <header>
             <i class="fas fa-birthday-cake birthday-icon"></i>
             <h1>Birthday Countdown Tracker</h1>
-            <p class="subtitle">Mark each day as you count down to December 28th!</p>
+            <p class="subtitle">Mark each day until December 28th!</p>
         </header>
         
         <div class="main-content">
-            <div class="left-panel">
-                <div class="section">
-                    <h2 class="section-title"><i class="fas fa-clock"></i> Time Until Birthday</h2>
-                    
-                    <div class="countdown-container">
-                        <div class="countdown-box">
-                            <div class="countdown-value" id="days">00</div>
-                            <div class="countdown-label">Days</div>
-                        </div>
-                        <div class="countdown-box">
-                            <div class="countdown-value" id="hours">00</div>
-                            <div class="countdown-label">Hours</div>
-                        </div>
-                        <div class="countdown-box">
-                            <div class="countdown-value" id="minutes">00</div>
-                            <div class="countdown-label">Minutes</div>
-                        </div>
-                        <div class="countdown-box">
-                            <div class="countdown-value" id="seconds">00</div>
-                            <div class="countdown-label">Seconds</div>
-                        </div>
+            <!-- Countdown Section -->
+            <div class="section">
+                <h2 class="section-title"><i class="fas fa-clock"></i> Time Remaining</h2>
+                
+                <div class="countdown-container">
+                    <div class="countdown-box">
+                        <div class="countdown-value" id="days">00</div>
+                        <div class="countdown-label">Days</div>
                     </div>
-                    
-                    <div class="progress-section">
-                        <h3 class="progress-title">Year Progress</h3>
-                        <div class="progress-bar">
-                            <div class="progress-fill" id="progress-fill"></div>
-                        </div>
-                        <div class="progress-text" id="progress-text">0% of the year has passed</div>
+                    <div class="countdown-box">
+                        <div class="countdown-value" id="hours">00</div>
+                        <div class="countdown-label">Hours</div>
+                    </div>
+                    <div class="countdown-box">
+                        <div class="countdown-value" id="minutes">00</div>
+                        <div class="countdown-label">Minutes</div>
+                    </div>
+                    <div class="countdown-box">
+                        <div class="countdown-value" id="seconds">00</div>
+                        <div class="countdown-label">Seconds</div>
                     </div>
                 </div>
                 
-                <div class="section">
-                    <h2 class="section-title"><i class="fas fa-calendar-alt"></i> Today's Date</h2>
-                    <div style="text-align: center; padding: 20px;">
-                        <div id="current-date" style="font-size: 2rem; color: #7b2ff7; font-weight: 700; margin-bottom: 10px;"></div>
-                        <div id="current-day" style="font-size: 1.2rem; color: #666;"></div>
+                <div class="progress-section">
+                    <h3 class="progress-title">Year Progress</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
                     </div>
-                </div>
-                
-                <div class="message-section">
-                    <p class="message" id="countdown-message">The countdown is on!</p>
-                    <p class="motivation-text" id="motivation-text">Mark today as checked to track your progress!</p>
+                    <div class="progress-text" id="progress-text">0% of year passed</div>
                 </div>
             </div>
             
-            <div class="right-panel">
-                <div class="section">
-                    <div class="tracker-header">
-                        <h2 class="section-title"><i class="fas fa-check-circle"></i> Daily Tracker</h2>
-                        <div class="tracker-stats">
-                            <div class="stat-box">
-                                <div class="stat-value" id="checked-days">0</div>
-                                <div class="stat-label">Checked</div>
-                            </div>
-                            <div class="stat-box">
-                                <div class="stat-value" id="remaining-days">0</div>
-                                <div class="stat-label">Remaining</div>
-                            </div>
+            <!-- Today's Date -->
+            <div class="section today-date">
+                <h2 class="section-title"><i class="fas fa-calendar-alt"></i> Today</h2>
+                <div id="current-date">Loading...</div>
+                <div id="current-day"></div>
+            </div>
+            
+            <!-- Daily Tracker -->
+            <div class="section">
+                <div class="tracker-header">
+                    <h2 class="section-title"><i class="fas fa-check-circle"></i> Daily Tracker</h2>
+                    <div class="tracker-stats">
+                        <div class="stat-box">
+                            <div class="stat-value" id="checked-days">0</div>
+                            <div class="stat-label">Checked</div>
                         </div>
-                    </div>
-                    
-                    <div class="calendar-grid" id="calendar-grid">
-                        <!-- Day headers -->
-                        <div class="day-header">Sun</div>
-                        <div class="day-header">Mon</div>
-                        <div class="day-header">Tue</div>
-                        <div class="day-header">Wed</div>
-                        <div class="day-header">Thu</div>
-                        <div class="day-header">Fri</div>
-                        <div class="day-header">Sat</div>
-                        
-                        <!-- Calendar days will be generated by JavaScript -->
-                    </div>
-                    
-                    <div class="controls">
-                        <button class="btn btn-secondary" id="reset-btn">
-                            <i class="fas fa-redo"></i> Reset All
-                        </button>
-                        <button class="btn btn-primary" id="check-today-btn">
-                            <i class="fas fa-check"></i> Mark Today
-                        </button>
-                    </div>
-                    
-                    <div style="margin-top: 25px; text-align: center;">
-                        <p style="color: #666; font-size: 0.9rem;">
-                            <i class="fas fa-info-circle" style="color: #7b2ff7;"></i> 
-                            Click on past days to mark them as checked. Each checked day brings you closer to the birthday!
-                        </p>
+                        <div class="stat-box">
+                            <div class="stat-value" id="remaining-days">0</div>
+                            <div class="stat-label">Remaining</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value" id="progress-percent">0%</div>
+                            <div class="stat-label">Progress</div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="section">
-                    <h2 class="section-title"><i class="fas fa-award"></i> Achievement</h2>
-                    <div style="text-align: center; padding: 20px;">
-                        <div id="achievement-text" style="font-size: 1.3rem; color: #7b2ff7; font-weight: 600; margin-bottom: 15px;">
-                            Start tracking to earn achievements!
-                        </div>
-                        <div id="achievement-progress" style="height: 10px; background-color: #eee; border-radius: 5px; overflow: hidden;">
-                            <div id="achievement-fill" style="height: 100%; background: linear-gradient(to right, #7b2ff7, #f107a3); width: 0%;"></div>
-                        </div>
-                        <div id="achievement-percent" style="margin-top: 10px; color: #666; font-weight: 600;">0% complete</div>
+                <div class="calendar-container">
+                    <div class="calendar-grid" id="calendar-grid">
+                        <!-- Day headers -->
+                        <div class="day-header">S</div>
+                        <div class="day-header">M</div>
+                        <div class="day-header">T</div>
+                        <div class="day-header">W</div>
+                        <div class="day-header">T</div>
+                        <div class="day-header">F</div>
+                        <div class="day-header">S</div>
+                        
+                        <!-- Calendar days will be generated by JavaScript -->
                     </div>
                 </div>
+                
+                <div class="controls">
+                    <button class="btn btn-primary" id="check-today-btn">
+                        <i class="fas fa-check"></i> Mark Today
+                    </button>
+                    <button class="btn btn-secondary" id="reset-btn">
+                        <i class="fas fa-redo"></i> Reset All
+                    </button>
+                </div>
+                
+                <div class="instructions">
+                    <i class="fas fa-info-circle" style="color: #7b2ff7;"></i> 
+                    Tap past days to check them off. Each check brings you closer!
+                </div>
+            </div>
+            
+            <!-- Achievement -->
+            <div class="section achievement-section">
+                <h2 class="section-title"><i class="fas fa-award"></i> Achievement</h2>
+                <div id="achievement-text">Start tracking to earn achievements!</div>
+                <div id="achievement-progress">
+                    <div id="achievement-fill"></div>
+                </div>
+                <div id="achievement-percent">0% complete</div>
+            </div>
+            
+            <!-- Message Section -->
+            <div class="message-section">
+                <p class="message" id="countdown-message">The countdown is on!</p>
+                <p class="motivation-text" id="motivation-text">Mark today to start tracking!</p>
             </div>
         </div>
         
         <footer>
-            <p>Made with <span class="heart">♥</span> for the December 28th birthday celebration</p>
-            <p>Your progress is saved automatically - come back anytime!</p>
+            <p>Made with <span class="heart">♥</span> for December 28th</p>
+            <p>Progress saves automatically</p>
+            <p style="font-size: 0.75rem; margin-top: 8px; color: #999;">
+                Save to home screen for quick access
+            </p>
         </footer>
     </div>
 
     <script>
+        // Mobile-optimized Birthday Countdown Tracker
+        
         // Set the target birthday date (December 28th)
         const TARGET_MONTH = 11; // December is month 11 (0-indexed)
         const TARGET_DAY = 28;
@@ -630,6 +722,7 @@
                 document.getElementById('progress-fill').style.width = "100%";
                 document.getElementById('progress-text').textContent = "100% - It's your birthday!";
                 document.getElementById('motivation-text').textContent = "You made it! Time to celebrate!";
+                celebrateBirthday();
             }
         }
         
@@ -638,23 +731,26 @@
             const messageElement = document.getElementById('countdown-message');
             const motivationElement = document.getElementById('motivation-text');
             
-            if (days > 30) {
-                messageElement.textContent = "The countdown is on! Start planning the celebration!";
+            if (days > 60) {
+                messageElement.textContent = "The countdown is on!";
                 motivationElement.textContent = "Check off each day to track your journey!";
+            } else if (days > 30) {
+                messageElement.textContent = "Getting closer every day!";
+                motivationElement.textContent = "Every checked day is progress!";
             } else if (days > 7) {
-                messageElement.textContent = "Getting closer! Just a few weeks to go!";
-                motivationElement.textContent = "Every checked day is a step closer!";
+                messageElement.textContent = "Just a few weeks to go!";
+                motivationElement.textContent = "Keep your streak going!";
             } else if (days > 1) {
-                messageElement.textContent = "Almost there! Get ready to celebrate!";
-                motivationElement.textContent = "Mark today to keep your streak going!";
+                messageElement.textContent = "Almost there! Get ready!";
+                motivationElement.textContent = "Mark today to stay on track!";
             } else if (days === 1) {
                 messageElement.textContent = "Tomorrow is the big day! 🎉";
                 motivationElement.textContent = "One more day to check off!";
             } else if (days === 0 && hours > 12) {
-                messageElement.textContent = "Today's the day! Let's celebrate! 🥳";
+                messageElement.textContent = "Today's the day! 🥳";
                 motivationElement.textContent = "Today's the last day to check!";
             } else if (days === 0 && hours <= 12) {
-                messageElement.textContent = "Just a few hours to go! Get excited! 🎂";
+                messageElement.textContent = "Just a few hours to go! 🎂";
                 motivationElement.textContent = "Almost birthday time!";
             }
         }
@@ -736,6 +832,15 @@
                     dayBox.addEventListener('click', function() {
                         toggleDay(dateString, currentDate);
                     });
+                    
+                    // Add touch feedback
+                    dayBox.addEventListener('touchstart', function() {
+                        this.style.transform = 'scale(0.95)';
+                    });
+                    
+                    dayBox.addEventListener('touchend', function() {
+                        this.style.transform = 'scale(1)';
+                    });
                 } else {
                     dayBox.style.cursor = 'not-allowed';
                 }
@@ -754,7 +859,7 @@
             
             // Only allow checking past days and today (not future)
             if (dateObj > today) {
-                alert("You can only check off days that have already passed!");
+                showToast("You can only check off days that have already passed!");
                 return;
             }
             
@@ -764,8 +869,19 @@
                 // Add to checked days
                 checkedDays.push(dateString);
                 
-                // Play a subtle sound effect (if allowed)
-                playCheckSound();
+                // Haptic feedback on mobile
+                if (navigator.vibrate) {
+                    navigator.vibrate(50);
+                }
+                
+                // Visual feedback
+                const dayBox = event.target.closest('.day-box');
+                if (dayBox) {
+                    dayBox.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        dayBox.style.transform = 'scale(1)';
+                    }, 150);
+                }
             } else {
                 // Remove from checked days
                 checkedDays.splice(index, 1);
@@ -781,28 +897,46 @@
             updateAchievement();
         }
         
-        // Play check sound
-        function playCheckSound() {
-            // Create a simple audio context for a beep sound
-            try {
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                
-                oscillator.frequency.value = 800;
-                oscillator.type = 'sine';
-                
-                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
-                
-                oscillator.start(audioContext.currentTime);
-                oscillator.stop(audioContext.currentTime + 0.2);
-            } catch (e) {
-                // Audio context not supported, skip sound
-            }
+        // Show toast message
+        function showToast(message) {
+            // Create toast element
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(0, 0, 0, 0.8);
+                color: white;
+                padding: 12px 20px;
+                border-radius: 10px;
+                z-index: 1000;
+                font-size: 0.9rem;
+                max-width: 80%;
+                text-align: center;
+                animation: fadeInOut 3s ease;
+            `;
+            
+            // Add keyframes for animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fadeInOut {
+                    0% { opacity: 0; bottom: 0; }
+                    10% { opacity: 1; bottom: 20px; }
+                    90% { opacity: 1; bottom: 20px; }
+                    100% { opacity: 0; bottom: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            // Remove toast after animation
+            setTimeout(() => {
+                document.body.removeChild(toast);
+                document.head.removeChild(style);
+            }, 3000);
         }
         
         // Update stats display
@@ -812,6 +946,10 @@
             
             document.getElementById('checked-days').textContent = checkedCount;
             document.getElementById('remaining-days').textContent = totalDays;
+            
+            // Update progress percentage
+            const progressPercent = totalDays > 0 ? Math.round((checkedCount / totalDays) * 100) : 0;
+            document.getElementById('progress-percent').textContent = `${progressPercent}%`;
         }
         
         // Update achievement progress
@@ -829,17 +967,17 @@
                 const achievementText = document.getElementById('achievement-text');
                 
                 if (achievementPercent === 0) {
-                    achievementText.textContent = "Start tracking to earn achievements!";
+                    achievementText.textContent = "Start tracking!";
                 } else if (achievementPercent < 25) {
-                    achievementText.textContent = "Getting started! Keep going!";
+                    achievementText.textContent = "Getting started!";
                 } else if (achievementPercent < 50) {
-                    achievementText.textContent = "Good progress! You're on your way!";
+                    achievementText.textContent = "Good progress!";
                 } else if (achievementPercent < 75) {
-                    achievementText.textContent = "Great job! More than halfway there!";
+                    achievementText.textContent = "Halfway there!";
                 } else if (achievementPercent < 100) {
-                    achievementText.textContent = "Almost there! Just a few more days!";
+                    achievementText.textContent = "Almost perfect!";
                 } else {
-                    achievementText.textContent = "🎉 Perfect! You tracked every day! 🎉";
+                    achievementText.textContent = "🎉 Perfect! 🎉";
                 }
             }
         }
@@ -851,27 +989,77 @@
             const todayString = today.toISOString().split('T')[0];
             
             if (!checkedDays.includes(todayString)) {
-                toggleDay(todayString, today);
-                alert("Today marked as checked! ✅");
+                // Simulate click on today's box
+                const todayBox = document.querySelector('.day-box.today');
+                if (todayBox) {
+                    todayBox.click();
+                }
+                showToast("✅ Today checked!");
             } else {
-                alert("Today is already checked! ✅");
+                showToast("✅ Already checked!");
             }
         }
         
         // Reset all checked days
         function resetAll() {
-            if (confirm("Are you sure you want to reset all checked days? This cannot be undone.")) {
+            if (confirm("Reset all checked days? This cannot be undone.")) {
                 checkedDays = [];
                 localStorage.removeItem(STORAGE_KEY);
                 generateCalendar();
                 updateAchievement();
-                alert("All checked days have been reset.");
+                showToast("All days reset");
+            }
+        }
+        
+        // Celebrate birthday with confetti
+        function celebrateBirthday() {
+            // Create confetti effect
+            const colors = ['#7b2ff7', '#f107a3', '#ffcc00', '#00ff88', '#ff9a9e'];
+            
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.cssText = `
+                    position: fixed;
+                    width: 10px;
+                    height: 10px;
+                    background: ${colors[Math.floor(Math.random() * colors.length)]};
+                    border-radius: 50%;
+                    top: -10px;
+                    left: ${Math.random() * 100}%;
+                    z-index: 1000;
+                    pointer-events: none;
+                `;
+                
+                document.body.appendChild(confetti);
+                
+                // Animate
+                const animation = confetti.animate([
+                    { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+                    { transform: `translateY(${window.innerHeight}px) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+                ], {
+                    duration: Math.random() * 2000 + 1000,
+                    easing: 'cubic-bezier(0.1, 0.8, 0.3, 1)'
+                });
+                
+                // Remove after animation
+                animation.onfinish = () => confetti.remove();
             }
         }
         
         // Set up event listeners
         document.getElementById('check-today-btn').addEventListener('click', markToday);
         document.getElementById('reset-btn').addEventListener('click', resetAll);
+        
+        // Add touch feedback to buttons
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('touchstart', function() {
+                this.style.transform = 'scale(0.95)';
+            });
+            
+            btn.addEventListener('touchend', function() {
+                this.style.transform = 'scale(1)';
+            });
+        });
         
         // Initialize the app
         updateCurrentDate();
@@ -884,6 +1072,17 @@
         
         // Update current date every minute (in case day changes)
         setInterval(updateCurrentDate, 60000);
+        
+        // Check for PWA install prompt
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent the mini-infobar from appearing on mobile
+            e.preventDefault();
+            // Show our custom install prompt
+            const installPrompt = document.querySelector('.install-prompt');
+            if (installPrompt) {
+                installPrompt.classList.add('show');
+            }
+        });
     </script>
 </body>
 </html>
